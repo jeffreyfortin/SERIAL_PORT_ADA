@@ -1,0 +1,30 @@
+
+project Main is
+
+   type Build_Type is ("release", "debug");
+   Buildfor : Build_Type := external ("Buildfor", "release");
+   Inst_Dir := external_as_list ("Inst-Path", ",");
+
+   case Buildfor is
+      when "release" =>
+         for Source_Dirs use (".");
+      when others =>
+         null;
+   end case;
+   
+   for Main use ("test_data_stream");
+
+   for Languages use ("Ada");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O0", "-gnata", "-gnatwa");
+      --COMPILER_SWITCHES_PLACEHOLDER--
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("Ada") use ("-g");
+      --BUILDER_SWITCHES_PLACEHOLDER--
+      for Global_Configuration_Pragmas use "main.adc";
+   end Builder;
+
+end Main;
